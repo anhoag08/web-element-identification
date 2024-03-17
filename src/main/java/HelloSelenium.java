@@ -52,13 +52,13 @@ public class HelloSelenium {
 
     public static double calcSimilarity(Vector<Vector<String>> targetVec, Vector<Vector<String>> elementVec) {
         double cossimTargetText, cossimTargetAttr;
-        if (!elementVec.getFirst().isEmpty()) {
-            cossimTargetText = CosineSimilarity.cosineSimilarity(targetVec.getFirst(), elementVec.getFirst());
+        if (!elementVec.get(0).isEmpty()) {
+            cossimTargetText = CosineSimilarity.cosineSimilarity(targetVec.get(0), elementVec.get(0));
         } else {
             cossimTargetText = 0;
         }
         if (!elementVec.get(1).isEmpty()) {
-            cossimTargetAttr = CosineSimilarity.cosineSimilarity(targetVec.getFirst(), elementVec.get(1));
+            cossimTargetAttr = CosineSimilarity.cosineSimilarity(targetVec.get(0), elementVec.get(1));
         } else {
             cossimTargetAttr = 0;
         }
@@ -129,7 +129,7 @@ public class HelloSelenium {
         Vector<String> attrUniqueWord = new Vector<>();
         Vector<String> attrFrequency = new Vector<>();
 
-        for (String text : valueVec.getFirst()) {
+        for (String text : valueVec.get(0)) {
             if (!textUniqueWord.contains(text)) {
                 textUniqueWord.add(text);
                 textFrequency.add("1");
@@ -243,7 +243,7 @@ public class HelloSelenium {
     public static void targetPrepTFIDF(Vector<Vector<String>> valueVec) {
         Vector<String> targetUniqueWord = new Vector<>();
         Vector<String> targetFrequency = new Vector<>();
-        for (String target : valueVec.getFirst()) {
+        for (String target : valueVec.get(0)) {
             if (!targetUniqueWord.contains(target)) {
                 targetUniqueWord.add(target);
                 targetFrequency.add("1");

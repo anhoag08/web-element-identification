@@ -33,6 +33,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     server_address = ('', 8000)  # Listen on port 8000, change as needed
     httpd = HTTPServer(server_address, CustomHandler)
-    ft = fasttext.load_model('cc.en.5.bin')
+    ft = fasttext.load_model('src/main/resources/python_server/cc.en.5.bin')
     print("Server started on port 8000")
     httpd.serve_forever()

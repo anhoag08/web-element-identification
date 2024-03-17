@@ -206,10 +206,10 @@ public class HelloSelenium {
                 numerator.set(j, Double.toString(vectorVal));
             }
             valueVec.subList(0, 3).clear();
-            valueVec.addFirst(numerator);
+            valueVec.add(0, numerator);
         } else {
             valueVec.subList(0, 3).clear();
-            valueVec.addFirst(new Vector<>());
+            valueVec.add(0, new Vector<>());
         }
 
         //attr
@@ -233,10 +233,10 @@ public class HelloSelenium {
                 numerator.set(j, Double.toString(vectorVal));
             }
             valueVec.subList(1, 3).clear();
-            valueVec.addLast(numerator);
+            valueVec.add(valueVec.size() - 1, numerator);
         } else {
             valueVec.subList(1, 3).clear();
-            valueVec.addLast(new Vector<>());
+            valueVec.add(valueVec.size() - 1, new Vector<>());
         }
     }
 

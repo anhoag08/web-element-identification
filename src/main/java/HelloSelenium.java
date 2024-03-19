@@ -11,6 +11,7 @@ import java.lang.Math;
 import java.util.*;
 
 public class HelloSelenium {
+    private static final double TFIDF_WEIGHT = 1.5;
     static HashMap<String, Integer> attrGlobalFreq = new HashMap<>();
     static HashMap<String, Integer> textGlobalFreq = new HashMap<>();
     static HashMap<String, Integer> targetGlobalFreq = new HashMap<>();
@@ -18,9 +19,9 @@ public class HelloSelenium {
     static HashMap<String, Vector<Vector<String>>> targetWordMap = new HashMap<>();
     static double elementSize = 0;
     static double targetSize = 0;
-    static final double alpha = 1.3;
+    static final double SIMILARITY_TEXT_WEIGHT = 3;
 
-    static final int vectorizationSize = 5;
+    static final int VECTORIZATION_SIZE = 5;
 
     public static void main(String[] args) throws IOException {
         elementPrep("https://saucedemo.com/");
@@ -62,7 +63,7 @@ public class HelloSelenium {
         } else {
             cossimTargetAttr = 0;
         }
-        return (cossimTargetText * alpha + cossimTargetAttr) / (alpha + 1);
+        return (cossimTargetText * SIMILARITY_TEXT_WEIGHT + cossimTargetAttr) / (SIMILARITY_TEXT_WEIGHT + 1);
     }
 
     public static Vector<String> keywordPrep(Vector<String> keywordVec) {
@@ -175,12 +176,12 @@ public class HelloSelenium {
 
     public static void calcTFIDF(Vector<Vector<String>> valueVec) {
         for (int i = 0; i < valueVec.get(1).size(); i++) {
-            double tfidf = Double.parseDouble(valueVec.get(2).get(i)) * Math.log(elementSize / textGlobalFreq.get(valueVec.get(1).get(i)));
+            double tfidf = Double.parseDouble(valueVec.get(2).get(i)) * Math.log(elementSize / textGlobalFreq.get(valueVec.get(1).get(i)))/Math.log(TFIDF_WEIGHT);
             valueVec.get(2).set(i, Double.toString(tfidf));
         }
 
         for (int i = 0; i < valueVec.get(4).size(); i++) {
-            double tfidf = Double.parseDouble(valueVec.get(5).get(i)) * Math.log(elementSize / attrGlobalFreq.get(valueVec.get(4).get(i)));
+            double tfidf = Double.parseDouble(valueVec.get(5).get(i)) * Math.log(elementSize / attrGlobalFreq.get(valueVec.get(4).get(i)))/Math.log(TFIDF_WEIGHT);
             valueVec.get(5).set(i, Double.toString(tfidf));
         }
     }
@@ -190,18 +191,18 @@ public class HelloSelenium {
         if (!valueVec.get(1).isEmpty()) {
             double denominator = 0;
             Vector<String> numerator = new Vector<>();
-            for (int i = 0; i < vectorizationSize; i++) {
+            for (int i = 0; i < VECTORIZATION_SIZE; i++) {
                 numerator.add("0");
             }
             for (int i = 0; i < valueVec.get(1).size(); i++) {
                 Vector<String> textVectorization = PythonTruthTableServer.vectorization(valueVec.get(1).get(i));
-                for (int j = 0; j < vectorizationSize; j++) {
+                for (int j = 0; j < VECTORIZATION_SIZE; j++) {
                     double numeratorVal = Double.parseDouble(numerator.get(j)) + Double.parseDouble(textVectorization.get(j)) * Double.parseDouble(valueVec.get(2).get(i));
                     numerator.set(j, Double.toString(numeratorVal));
                 }
                 denominator += Double.parseDouble(valueVec.get(2).get(i));
             }
-            for (int j = 0; j < vectorizationSize; j++) {
+            for (int j = 0; j < VECTORIZATION_SIZE; j++) {
                 double vectorVal = Double.parseDouble(numerator.get(j)) / denominator;
                 numerator.set(j, Double.toString(vectorVal));
             }
@@ -217,18 +218,18 @@ public class HelloSelenium {
         if (!valueVec.get(1).isEmpty()) {
             double denominator = 0;
             Vector<String> numerator = new Vector<>();
-            for (int i = 0; i < vectorizationSize; i++) {
+            for (int i = 0; i < VECTORIZATION_SIZE; i++) {
                 numerator.add("0");
             }
             for (int i = 0; i < valueVec.get(1).size(); i++) {
                 Vector<String> attrVectorization = PythonTruthTableServer.vectorization(valueVec.get(1).get(i));
-                for (int j = 0; j < vectorizationSize; j++) {
+                for (int j = 0; j < VECTORIZATION_SIZE; j++) {
                     double numeratorVal = Double.parseDouble(numerator.get(j)) + Double.parseDouble(attrVectorization.get(j)) * Double.parseDouble(valueVec.get(2).get(i));
                     numerator.set(j, Double.toString(numeratorVal));
                 }
                 denominator += Double.parseDouble(valueVec.get(2).get(i));
             }
-            for (int j = 0; j < vectorizationSize; j++) {
+            for (int j = 0; j < VECTORIZATION_SIZE; j++) {
                 double vectorVal = Double.parseDouble(numerator.get(j)) / denominator;
                 numerator.set(j, Double.toString(vectorVal));
             }
@@ -343,18 +344,18 @@ public class HelloSelenium {
     private static void targetFindVector(Vector<Vector<String>> valueVec) {
         double denominator = 0;
         Vector<String> numerator = new Vector<>();
-        for (int i = 0; i < vectorizationSize; i++) {
+        for (int i = 0; i < VECTORIZATION_SIZE; i++) {
             numerator.add("0");
         }
         for (int i = 0; i < valueVec.get(0).size(); i++) {
             Vector<String> targetVectorization = PythonTruthTableServer.vectorization(valueVec.get(0).get(i));
-            for (int j = 0; j < vectorizationSize; j++) {
+            for (int j = 0; j < VECTORIZATION_SIZE; j++) {
                 double numeratorVal = Double.parseDouble(numerator.get(j)) + Double.parseDouble(targetVectorization.get(j)) * Double.parseDouble(valueVec.get(1).get(i));
                 numerator.set(j, Double.toString(numeratorVal));
             }
             denominator += Double.parseDouble(valueVec.get(1).get(i));
         }
-        for (int j = 0; j < vectorizationSize; j++) {
+        for (int j = 0; j < VECTORIZATION_SIZE; j++) {
             double vectorVal = Double.parseDouble(numerator.get(j)) / denominator;
             numerator.set(j, Double.toString(vectorVal));
         }

@@ -29,4 +29,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 /.idea
-/src/main/resources/python_server/cc.en.5.bin
+/src/main/resources/python_server/*.bin
